@@ -5,18 +5,20 @@ Created on Wed Apr 14 20:37:20 2021
 
 @author: jguterl
 """
-
+import sys
+sys.path.insert(0, '../simmanager/')
+sys.path.append('.')
 
 import libconf
 import os,io
 import shutil
-from SimManager import SimulationManager, MakeSimFolder, MakeParameterArray, MakeParamInfo, UpdateInputFile
+from SimManager_local import SimulationManager, MakeSimFolder, MakeParameterArray, MakeParamInfo, UpdateInputFile
 
 
 
 class Run(SimulationManager):
     def __init__(self):
-        self.GITRExecPath = os.path.expanduser('~/GITR/build/GITR')
+        self.GITRExecPath = os.path.expanduser('~/GeneralAtomics/GITR_1/build/GITR')
         self.ParamScan = {}
         self.ParamModif = {}
         self.ReferenceDirectory = None
@@ -82,12 +84,6 @@ class Run(SimulationManager):
         for D in self.ListDirectory:
             Dic.update({'Directory': D})
             UpdateInputFile(Dic, self.LoadMethod, self.DumpMethod, AddParam, self.Verbose)
-
-
-
-
-
-
 
 
 

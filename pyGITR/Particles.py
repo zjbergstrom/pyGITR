@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-
-
 import numpy as np
 from pyGITR.math_helper import *
 from typing import Callable
@@ -233,7 +231,7 @@ class ParticleDistribution():
             if k != 'Np' and k in self.ListAttr and type(v) == np.ndarray:
                 assert len(v.shape)<2 and v.shape[0] == self.Particles['Np'], 'Wrong dimension for particle attribute {}  with shape {}. Np={}'.format(k,v.shape,self.Particles['Np'])
 
-    def WriteParticleFile(self,FileName, Format='f8', Folder='input'):
+    def WriteParticleFile(self,FileName, Format='f8', Folder=''):
         self.CheckParticles()
         File = netCDF4.Dataset(os.path.join(Folder,FileName), 'w', format='NETCDF4')
 

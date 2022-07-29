@@ -1,13 +1,22 @@
-import electronvolt_num as units
+import sys
+sys.path.insert(0, '/Users/bergstrom/GeneralAtomics/pyGITR/simmanager/')
+sys.path.append('.')
+from SimManager_local import rget
+#import SimManager_local
+
+
+#import electronvolt_num as units
+import electronvolt as units
 import numpy as np
 from matplotlib import pyplot as plt
 from netCDF4 import Dataset
-plt.ion()
+#plt.ion()
 FileNameSurface='/home/jguterl/Dropbox/python/pyGITR/examples/large_box4/output/surface.nc'
 FileNameParticle='/home/jguterl/Dropbox/python/pyGITR/examples/large_box4/output/particleSource.nc'
 import netCDF4
 import os
-from SimManager import rget
+
+
 
 class PostProcess():
     def __init__(self, Simulations = None, **kwargs):

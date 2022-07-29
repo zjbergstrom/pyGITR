@@ -6,6 +6,9 @@ Created on Mon Feb  1 20:10:56 2021
 @author: guterl
 """
 
+# Contains classes for
+# GeomGroup, GeomInput, GeomSetupm, GeomPlot
+
 import numpy as np
 import libconf
 import io
@@ -16,7 +19,7 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 from mpl_toolkits.mplot3d.art3d import Line3DCollection
-from matplotlib import collections as mc
+#from matplotlib import collections as mc
 from pyGITR.math_helper import *
 
 class GeomGroup():
@@ -248,6 +251,7 @@ class GeomPlot(GeomGroup):
         mn = min([xmin, ymin, zmin])
         mx = max([xmax, ymax, zmax])
         self.SetAxisLim(mn, mx)
+        #plt.show()
 
     def ShowCentroids(self, ax=None):
         if ax is None:
@@ -256,6 +260,7 @@ class GeomPlot(GeomGroup):
             ax = plt.gca()
         ax.scatter(self.Centroid[:, 0], self.Centroid[:, 1],
                    self.Centroid[:, 2], marker='o', color='b')
+        plt.show()
 
     def ShowNormals(self, GroupID=None, ax=None, L=0.002, Color='b'):
         if ax is None:
@@ -268,8 +273,24 @@ class GeomPlot(GeomGroup):
         Idx = self.GetGroupIdx(GroupID)
         if self.Verbose:
             print('Normals Idx:', Idx)
-        ax.quiver(c[Idx, 0], c[Idx, 1], c[Idx, 2], v[Idx, 0],
-                  v[Idx, 1], v[Idx, 2], length=L, normalize=True, color=Color)
+        ax.quiver(c[Idx, 0], c[Idx, 1], c[Idx, 2], v[Idx, 0], v[Idx, 1], v[Idx, 2], length=L, normalize=True, color=Color)
+        plt.show()
+        # ax.add_collection(lc)
+
+    def ShowInDir(self, GroupID=None, ax=None, L=0.002, Color='g'):
+        if ax is None:
+            ax = self.ax
+        if ax is None:
+            ax = plt.gca()
+        c = self.Centroid
+        v = self.normalVec
+        n = self.GeomInput['inDir']
+
+        Idx = self.GetGroupIdx(GroupID)
+        if self.Verbose:
+            print('Normals Idx:', Idx)
+        ax.quiver(c[Idx, 0], c[Idx, 1], c[Idx, 2], v[Idx, 0]*n[Idx], v[Idx, 1]*n[Idx], v[Idx, 2]*n[Idx], length=5*L, normalize=True, color=Color)
+        plt.show()
         # ax.add_collection(lc)
 
     def SetAxisLim(self, mn, mx):
