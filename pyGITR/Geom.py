@@ -251,7 +251,7 @@ class GeomPlot(GeomGroup):
         mn = min([xmin, ymin, zmin])
         mx = max([xmax, ymax, zmax])
         self.SetAxisLim(mn, mx)
-        #plt.show()
+        # plt.show()
 
     def ShowCentroids(self, ax=None):
         if ax is None:
@@ -297,6 +297,11 @@ class GeomPlot(GeomGroup):
         self.ax.set_xlim3d(mn, mx)
         self.ax.set_ylim3d(mn, mx)
         self.ax.set_zlim3d(mn, mx)
+
+    def SetAxisLim3D(self, xrange, yrange, zrange):
+        self.ax.set_xlim3d(xrange[0],xrange[1])
+        self.ax.set_ylim3d(yrange[0],yrange[1])
+        self.ax.set_zlim3d(zrange[0],zrange[1])
 
 class GeomSetup(GeomInput, GeomPlot):
 
