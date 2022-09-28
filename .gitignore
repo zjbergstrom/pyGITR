@@ -9,3 +9,6 @@ eggs
 parts
 src/*.egg-info
 *.egg-info
+*.nc
+*.txt
+*.cfg

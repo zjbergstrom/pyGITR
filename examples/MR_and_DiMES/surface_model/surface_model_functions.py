@@ -451,7 +451,7 @@ def runGITR(rank,executable,folder,nP,dt,nT,plot):
     os.system("cp output/surface.nc output/surface_{}.nc".format(rank))
     os.system("cp output/history.nc output/history_{}.nc".format(rank))
     # os.system("cp output/spec.nc output/spec_{}.nc".format(rank))
-    os.system("cp {} surface_evolution_C_W_{}.nc".format(FileNameSurfaceConcentration,rank))
+    os.system("cp {} input/surface_evolution_C_W_{}.nc".format(FileNameSurfaceConcentration,rank))
 
 def plotConc(surface_index,Surface_time,Conc):
     plt.figure()

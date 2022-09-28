@@ -19,7 +19,6 @@ class Input():
                     'USE_IONIZATION':1,
                     'USE_RECOMBINATION':1,
                     'USEPERPDIFFUSION':0,
-                    # 'USEPARDIFFUSION':0,
                     'USECOULOMBCOLLISIONS':0,
                     'USEFRICTION':0,
                     'USEANGLESCATTERING':0,
@@ -33,7 +32,7 @@ class Input():
                     'LC_INTERP':0,
                     'GENERATE_LC':0,
                     'BFIELD_INTERP':0,
-                    'EFIELD_INTERP':0,
+                    'EFIELD_INTERP':0, # this is outdated, use presheath_interp instead
                     'PRESHEATH_INTERP':0,
                     'DENSITY_INTERP':0,
                     'TEMP_INTERP':0,
@@ -42,9 +41,9 @@ class Input():
                     'ODEINT':0,
                     'FIXED_SEEDS':1,
                     'PARTICLESEEDS':1,
-                    'GEOM_TRACE':0,
-                    'GEOM_HASH':0,
-                    'GEOM_HASH_SHEATH':0,
+                    'GEOM_TRACE':0, # used to optimize performance
+                    'GEOM_HASH':0, # used to optimize performance
+                    'GEOM_HASH_SHEATH':0, # used to optimize performance
                     'PARTICLE_TRACKS':1,
                     'PARTICLE_SOURCE_SPACE':0,
                     'PARTICLE_SOURCE_ENERGY':0,
@@ -53,7 +52,7 @@ class Input():
                     'SPECTROSCOPY':3,
                     'USE3DTETGEOM':1,
                     'USECYLSYMM':0,
-                    'USEFIELDALIGNEDVALUES':0,
+                    'USEFIELDALIGNEDVALUES':0, # This is outdated
                     'FLUX_EA':1,
                     'FORCE_EVAL':0,
                     'USE_SORT':0,
@@ -234,7 +233,7 @@ class Input():
         'rString' : "r",
         'zString' : "z",
         'yString' : "y",
-        'fileString' : "bField_created.nc",
+        'fileString' : "bField.nc",
         'gridNrString' : "nR",
         'gridNyString' : "nY",
         'gridNzString' : "nZ",
@@ -250,13 +249,13 @@ class Input():
         'Er' : 0.0,
         'Ez' : 0.0,
         'Et' : 0.0,
-        'fileString' : "profiles_created.nc", # LcS.nc
+        'fileString' : "profiles.nc", # LcS.nc
         'gridNrString' : "nR",
         'gridNyString' : "nY",
         'gridNzString' : "nZ",
-        'gridRString' : "gridR",
-        'gridYString' : "gridY",
-        'gridZString' : "gridZ",
+        'gridRString' : "r",
+        'gridYString' : "y",
+        'gridZString' : "z",
         'radialComponentString' : "Er",
         'axialComponentString' : "Ez",
         'toroidalComponentString' : "Et"
@@ -277,7 +276,7 @@ class Input():
         {
         'ti' : 20.0,
         'te' : 20.0,
-        'fileString' : "profiles_created.nc",
+        'fileString' : "profiles.nc",
         'gridNrString' : "nR",
         'gridNzString' : "nZ",
         'gridRString' : "r",
@@ -289,7 +288,7 @@ class Input():
         {
         'ni' : 1.0E+19,
         'ne' : 1.0E+19,
-        'fileString' : "profiles_created.nc",
+        'fileString' : "profiles.nc",
         'gridNrString' : "nR",
         'gridNzString' : "nZ",
         'gridRString' : "r",
@@ -303,16 +302,16 @@ class Input():
         'flowVr' : 0.0,
         'flowVy' : 0.0,
         'flowVz' : 0.0,
-        'fileString' : "profiles_created.nc", # LcS.nc
+        'fileString' : "profiles.nc", # LcS.nc
         'gridNrString' : "nR",
         'gridNyString' : "nY",
         'gridNzString' : "nZ",
         'gridRString' : "r",
         'gridYString' : "y",
         'gridZString' : "z",
-        'flowVrString' : "flowVr",
-        'flowVzString' : "flowVz",
-        'flowVtString' : "flowVt",
+        'flowVrString' : "vr",
+        'flowVzString' : "vz",
+        'flowVtString' : "vt",
         },
     # 'ConnectionLength' : 
     #     {    
@@ -337,14 +336,16 @@ class Input():
         'gradTiR' : 0.0,
         'gradTiY' : 0.0,
         'gradTiZ' : 0.0,
-        'fileString' : "profiles_created.nc",
+        'fileString' : "profiles.nc",
         'gridNrString' : "nR",
         'gridNzString' : "nZ",
         'gridRString' : "r",
         'gridZString' : "z",
         'gradTiRString' : "gradTiR",
+        'gradTiYString' : "gradTiY",
         'gradTiZString' : "gradTiZ",
         'gradTeRString' : "gradTeR",
+        'gradTeYString' : "gradTeY",
         'gradTeZString' : "gradTeZ",
         },
     # 'Lc' : 
@@ -370,7 +371,7 @@ class Input():
     'Diffusion' :
         {
         'Dperp' : 0.0,
-        'fileString' : "profiles_created.nc",
+        'fileString' : "profiles.nc",
         'gridNrString' : "nR",
         'gridNzString' : "nZ",
         'gridRString' : "r",
@@ -462,15 +463,15 @@ class Input():
         self.Input['diagnostics'] ={
             'leakZ' : 1.0,
             'trackSubSampleFactor' : 1000,
-            'netx0' : -0.03,
-            'netx1' : 0.03,
+            'netx0' : 1.38,
+            'netx1' : 1.58,
             'nX' : 100,
-            'nety0' : -0.03,
-            'nety1' : 0.03,
-            'nY' : 120,
-            'netz0' : -0.015,
-            'netz1' : 0.03,
-            'nZ' : 150,
+            'nety0' : -0.1,
+            'nety1' : 0.1,
+            'nY' : 100,
+            'netz0' : -1.25001,
+            'netz1' : -1.45001,
+            'nZ' : 10,
             'densityChargeBins' : 6,
             }
 

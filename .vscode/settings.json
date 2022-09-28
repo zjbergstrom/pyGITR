@@ -1,0 +1,7 @@
+{
+    "python.analysis.extraPaths": [
+        "./simmanager",
+        "./examples/MR_and_DiMES/surface_model",
+        "./examples/MR_and_DiMES/setup"
+    ]
+}

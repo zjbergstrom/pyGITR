@@ -251,7 +251,7 @@ class GeomPlot(GeomGroup):
         mn = min([xmin, ymin, zmin])
         mx = max([xmax, ymax, zmax])
         self.SetAxisLim(mn, mx)
-        #plt.show()
+        # plt.show()
 
     def ShowCentroids(self, ax=None):
         if ax is None:
@@ -260,9 +260,9 @@ class GeomPlot(GeomGroup):
             ax = plt.gca()
         ax.scatter(self.Centroid[:, 0], self.Centroid[:, 1],
                    self.Centroid[:, 2], marker='o', color='b')
-        plt.show()
+        # plt.show()
 
-    def ShowNormals(self, GroupID=None, ax=None, L=0.002, Color='b'):
+    def ShowNormals(self, GroupID=None, ax=None, L=0.005, Color='b'):
         if ax is None:
             ax = self.ax
         if ax is None:
@@ -274,10 +274,10 @@ class GeomPlot(GeomGroup):
         if self.Verbose:
             print('Normals Idx:', Idx)
         ax.quiver(c[Idx, 0], c[Idx, 1], c[Idx, 2], v[Idx, 0], v[Idx, 1], v[Idx, 2], length=L, normalize=True, color=Color)
-        plt.show()
+        # plt.show()
         # ax.add_collection(lc)
 
-    def ShowInDir(self, GroupID=None, ax=None, L=0.002, Color='g'):
+    def ShowInDir(self, GroupID=None, ax=None, L=0.005, Color='g'):
         if ax is None:
             ax = self.ax
         if ax is None:
@@ -297,6 +297,11 @@ class GeomPlot(GeomGroup):
         self.ax.set_xlim3d(mn, mx)
         self.ax.set_ylim3d(mn, mx)
         self.ax.set_zlim3d(mn, mx)
+
+    def SetAxisLim3D(self, xrange, yrange, zrange):
+        self.ax.set_xlim3d(xrange[0],xrange[1])
+        self.ax.set_ylim3d(yrange[0],yrange[1])
+        self.ax.set_zlim3d(zrange[0],zrange[1])
 
 class GeomSetup(GeomInput, GeomPlot):
 

@@ -56,6 +56,9 @@ class Distribs():
             f = f/Integrale(f, x, Array=False)
         return f
 
+    def Levy(x=np.linspace(0.001,10,10000), c=1, mu=0):
+        return np.sqrt(c/2/np.pi)*np.exp(-c/(x-mu))/((x-mu)**1.5)
+
     @classmethod
     def GetPdf(cls, f:str or Callable[np.array, np.ndarray], **kwargs) -> (np.ndarray,np.ndarray):
 

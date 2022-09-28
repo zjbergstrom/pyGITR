@@ -19,7 +19,6 @@ class Input():
                     'USE_IONIZATION':1,
                     'USE_RECOMBINATION':1,
                     'USEPERPDIFFUSION':0,
-                    'USEPARDIFFUSION':0,
                     'USECOULOMBCOLLISIONS':0,
                     'USEFRICTION':0,
                     'USEANGLESCATTERING':0,
@@ -30,10 +29,10 @@ class Input():
                     'USESHEATHEFIELD':1,
                     'BIASED_SURFACE':0,
                     'USEPRESHEATHEFIELD':0,
-                    'BFIELD_INTERP':0,
                     'LC_INTERP':0,
                     'GENERATE_LC':0,
-                    'EFIELD_INTERP':0,
+                    'BFIELD_INTERP':0,
+                    'EFIELD_INTERP':0, # this is outdated, use presheath_interp instead
                     'PRESHEATH_INTERP':0,
                     'DENSITY_INTERP':0,
                     'TEMP_INTERP':0,
@@ -42,9 +41,9 @@ class Input():
                     'ODEINT':0,
                     'FIXED_SEEDS':1,
                     'PARTICLESEEDS':1,
-                    'GEOM_TRACE':0,
-                    'GEOM_HASH':0,
-                    'GEOM_HASH_SHEATH':0,
+                    'GEOM_TRACE':0, # used to optimize performance
+                    'GEOM_HASH':0, # used to optimize performance
+                    'GEOM_HASH_SHEATH':0, # used to optimize performance
                     'PARTICLE_TRACKS':1,
                     'PARTICLE_SOURCE_SPACE':0,
                     'PARTICLE_SOURCE_ENERGY':0,
@@ -53,7 +52,7 @@ class Input():
                     'SPECTROSCOPY':3,
                     'USE3DTETGEOM':1,
                     'USECYLSYMM':0,
-                    'USEFIELDALIGNEDVALUES':0,
+                    'USEFIELDALIGNEDVALUES':0, # This is outdated
                     'FLUX_EA':1,
                     'FORCE_EVAL':0,
                     'USE_SORT':0,
@@ -72,25 +71,28 @@ class Input():
         with io.open(FileName,'w') as f:
             libconf.dump(self.Input,f)
 
-    def SetBField(self,Br=None, By=None, Bt=None, B0=None, theta=None, phi=None, Degree=True):
+    def SetBField(self,Br=None, By=None, Bz=None, B0=None, theta=None, phi=None, Degree=True):
         if self.Input.get('BField') is None:
             self.Input['BField'] = {}
 
-        if Br is not None and By is not None and Bt is not None:
+        if Br is not None and By is not None and Bz is not None:
             self.Input['BField']['r'] = Br
-            self.Input['BField']['z'] = By
-            self.Input['BField']['y'] = Bz
+            self.Input['BField']['z'] = Bz
+            self.Input['BField']['y'] = By
             self.Input['backgroundPlasmaProfiles']['BField']['r'] = Br
-            self.Input['backgroundPlasmaProfiles']['BField']['z'] = By
-            self.Input['backgroundPlasmaProfiles']['BField']['y'] = Bz
+            self.Input['backgroundPlasmaProfiles']['BField']['z'] = Bz
+            self.Input['backgroundPlasmaProfiles']['BField']['y'] = By
 
         elif B0 is not None and theta is not None and phi is not None:
             theta = 2 #degree by default, set Degree=False in RotateVector for radian
+            Axisrotx = [1,0,0]
             Axisroty = [0,1,0]
             Axisrotz = [0,0,1]
-            Btot = [B0,0,0]
-            B1 = RotateVector(Btot, Axisroty, theta, Degree)
-            B  = RotateVector(B1, Axisrotz, phi, Degree)
+            # Btot = [B0,0,0]
+            Btot = [0,B0,0]
+            # B1 = RotateVector(Btot, Axisroty, theta, Degree)
+            # B  = RotateVector(B1, Axisrotz, phi, Degree)
+            B  = RotateVector(Btot, Axisrotx, theta, Degree)
             self.Input['BField']['r'] = B[0]
             self.Input['BField']['z'] = B[2]
             self.Input['BField']['y'] = B[1]
@@ -222,42 +224,42 @@ class Input():
     'biasPotential' : Voltage,
     'Bfield':
         {
-        # 'interpolation' : 0,
+        'interpolation' : 0,
         # 'value' : 1.234,
-        # 'filename' : "../test/netcdf_file_py.nc",
+        # 'filename' : "input/bField.nc",
         'r' : self.Input['BField']['r'],
         'z' : self.Input['BField']['z'],
         'y' : self.Input['BField']['y'],
         'rString' : "r",
         'zString' : "z",
         'yString' : "y",
-        # 'fileString' : "ar2Input.nc",
-        # 'gridNrString' : "nR",
-        # 'gridNyString' : "nY",
-        # 'gridNzString' : "nZ",
-        # 'gridRString' : "r",
-        # 'gridYString' : "y",
-        # 'gridZString' : "z",
-        # 'radialComponentString' : "br",
-        # 'axialComponentString' : "bz",
-        # 'toroidalComponentString' : "bt"
+        'fileString' : "bField.nc",
+        'gridNrString' : "nR",
+        'gridNyString' : "nY",
+        'gridNzString' : "nZ",
+        'gridRString' : "r",
+        'gridYString' : "y",
+        'gridZString' : "z",
+        'radialComponentString' : "br",
+        'axialComponentString' : "bz",
+        'toroidalComponentString' : "bt"
         },
-    # 'Efield' : 
-    #     {
-    #     'Er' : 0.0,
-    #     'Ez' : 0.0,
-    #     'Et' : 0.0,
-    #     'fileString' : "LcS.nc",
-    #     'gridNrString' : "nR",
-    #     'gridNyString' : "nY",
-    #     'gridNzString' : "nZ",
-    #     'gridRString' : "gridR",
-    #     'gridYString' : "gridY",
-    #     'gridZString' : "gridZ",
-    #     'radialComponentString' : "PSEr",
-    #     'axialComponentString' : "PSEz",
-    #     'toroidalComponentString' : "PSEt"
-    #     },
+    'Efield' : 
+        {
+        'Er' : 0.0,
+        'Ez' : 0.0,
+        'Et' : 0.0,
+        'fileString' : "profiles.nc", # LcS.nc
+        'gridNrString' : "nR",
+        'gridNyString' : "nY",
+        'gridNzString' : "nZ",
+        'gridRString' : "r",
+        'gridYString' : "y",
+        'gridZString' : "z",
+        'radialComponentString' : "Er",
+        'axialComponentString' : "Ez",
+        'toroidalComponentString' : "Et"
+        },
     # 'dtsEfield' :
     #     {
     #     'dtsEr' : 0.0,
@@ -274,42 +276,42 @@ class Input():
         {
         'ti' : 20.0,
         'te' : 20.0,
-        # 'fileString' : "profiles.nc",
-        # 'gridNrString' : "nX_t",
-        # 'gridNzString' : "nZ_t",
-        # 'gridRString' : "gridx_t",
-        # 'gridZString' : "gridz_t",
-        # 'IonTempString' : "ti",
-        # 'ElectronTempString' : "te",
+        'fileString' : "profiles.nc",
+        'gridNrString' : "nR",
+        'gridNzString' : "nZ",
+        'gridRString' : "r",
+        'gridZString' : "z",
+        'IonTempString' : "ti",
+        'ElectronTempString' : "te",
         },
     'Density' :
         {
         'ni' : 1.0E+19,
         'ne' : 1.0E+19,
-        # 'fileString' : "profiles.nc",
-        # 'gridNrString' : "nX_n",
-        # 'gridNzString' : "nZ_n",
-        # 'gridRString' : "gridx_n",
-        # 'gridZString' : "gridz_n",
-        # 'IonDensityString' : "ni",
-        # 'ElectronDensityString' : "ne",
+        'fileString' : "profiles.nc",
+        'gridNrString' : "nR",
+        'gridNzString' : "nZ",
+        'gridRString' : "r",
+        'gridZString' : "z",
+        'IonDensityString' : "ni",
+        'ElectronDensityString' : "ne",
         },
     'FlowVelocity' :
         {
         'interpolatorNumber' : 0,
         'flowVr' : 0.0,
         'flowVy' : 0.0,
-        'flowVz' : 0,
-        # 'fileString' : "LcS.nc",
-        # 'gridNrString' : "nR",
-        # 'gridNyString' : "nY",
-        # 'gridNzString' : "nZ",
-        # 'gridRString' : "gridR",
-        # 'gridYString' : "gridY",
-        # 'gridZString' : "gridZ",
-        # 'flowVrString' : "flowVr",
-        # 'flowVzString' : "flowVz",
-        # 'flowVtString' : "flowVt",
+        'flowVz' : 0.0,
+        'fileString' : "profiles.nc", # LcS.nc
+        'gridNrString' : "nR",
+        'gridNyString' : "nY",
+        'gridNzString' : "nZ",
+        'gridRString' : "r",
+        'gridYString' : "y",
+        'gridZString' : "z",
+        'flowVrString' : "vr",
+        'flowVzString' : "vz",
+        'flowVtString' : "vt",
         },
     # 'ConnectionLength' : 
     #     {    
@@ -328,21 +330,23 @@ class Input():
     #     },
     'gradT' :
         {
-        'gradTeR' : -0.0,
+        'gradTeR' : 0.0,
         'gradTeY' : 0.0,
         'gradTeZ' : 0.0,
-        'gradTiR' : -0.0,
+        'gradTiR' : 0.0,
         'gradTiY' : 0.0,
         'gradTiZ' : 0.0,
-        # 'fileString' : "profiles.nc",
-        # 'gridNrString' : "nX_gradTi",
-        # 'gridNzString' : "nZ_gradTi",
-        # 'gridRString' : "gridx_gradTi",
-        # 'gridZString' : "gridz_gradTi",
-        # 'gradTiRString' : "gradTiR",
-        # 'gradTiZString' : "gradTiZ",
-        # 'gradTeRString' : "gradTeR",
-        # 'gradTeZString' : "gradTeZ",
+        'fileString' : "profiles.nc",
+        'gridNrString' : "nR",
+        'gridNzString' : "nZ",
+        'gridRString' : "r",
+        'gridZString' : "z",
+        'gradTiRString' : "gradTiR",
+        'gradTiYString' : "gradTiY",
+        'gradTiZString' : "gradTiZ",
+        'gradTeRString' : "gradTeR",
+        'gradTeYString' : "gradTeY",
+        'gradTeZString' : "gradTeZ",
         },
     # 'Lc' : 
     #     {    
@@ -367,12 +371,12 @@ class Input():
     'Diffusion' :
         {
         'Dperp' : 0.0,
-        # 'fileString' : "profiles.nc",
-        # 'gridNrString' : "n_x",
-        # 'gridNzString' : "n_z",
-        # 'gridRString' : "gridx",
-        # 'gridZString' : "gridz",
-        # 'variableString' : "ni",
+        'fileString' : "profiles.nc",
+        'gridNrString' : "nR",
+        'gridNzString' : "nZ",
+        'gridRString' : "r",
+        'gridZString' : "z",
+        'variableString' : "ni",
         }
 }
 
@@ -456,22 +460,24 @@ class Input():
             }
 
     def SetDiagnostics(self):
-        self.Input['diagnostics'] ={'leakZ' : 1.0,
+        self.Input['diagnostics'] ={
+            'leakZ' : 1.0,
             'trackSubSampleFactor' : 1000,
-            # 'netx0' : -0.03,
-            # 'netx1' : 0.03,
-            # 'nX' : 100,
-            # 'nety0' : -0.03,
-            # 'nety1' : 0.03,
-            # 'nY' : 120,
-            # 'netz0' : -0.015,
-            # 'netz1' : 0.03,
-            # 'nZ' : 150,
-            # 'densityChargeBins' : 6,
+            'netx0' : 1.38,
+            'netx1' : 1.58,
+            'nX' : 100,
+            'nety0' : -0.1,
+            'nety1' : 0.1,
+            'nY' : 100,
+            'netz0' : -1.25001,
+            'netz1' : -1.45001,
+            'nZ' : 10,
+            'densityChargeBins' : 6,
             }
 
     def SetForceEvaluation(self):
-        self.Input['forceEvaluation'] = {'X0' : -0.03,
+        self.Input['forceEvaluation'] = {
+            'X0' : -0.03,
             'X1' : 0.03,
             'Y0' : -0.03,
             'Y1' : 0.03,
